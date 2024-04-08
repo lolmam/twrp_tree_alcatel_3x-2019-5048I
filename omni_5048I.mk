@@ -28,5 +28,5 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 # Add fingerprint from Stock ROM build.prop
 PRODUCT_BUILD_PROP_OVERRIDES += \
     # These lines are from my device. You MUST Replace yours.
-    BUILD_FINGERPRINT="TCL/5048I/Venice:9/PPR1.180610.011/v2B2P-0:user/release-keys" \
+    BUILD_FINGERPRINT="TCL/5048I/Venice:9/PPR1.180610.011/v2B2P-0:user/release-keys"
     PRIVATE_BUILD_DESC="full_k63v1us_64_bsp-user 9 PPR1.180610.011 v2B2P-0 release-keys"
