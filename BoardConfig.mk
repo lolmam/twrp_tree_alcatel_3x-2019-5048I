@@ -15,7 +15,7 @@ TARGET_USERIMAGES_USE_F2FS := true            # To add info about F2FS Filesyste
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 33554432
 # BOARD_USES_FULL_RECOVERY_IMAGE := true      # Uncomment this line if you want to remove size restriction
 BOARD_FLASH_BLOCK_SIZE := 0                   # Might be different for your chip
-BOARD_HAS_NO_REAL_SDCARD := true              # Depricated
+# BOARD_HAS_NO_REAL_SDCARD := true            # Depricated
 # BOARD_HAS_NO_SELECT_BUTTON := true          # Depricated
 BOARD_SUPPRESS_SECURE_ERASE := true
 BOARD_RECOVERY_SWIPE := true
@@ -54,7 +54,7 @@ TW_EXTRA_LANGUAGES := false
 TARGET_IS_64_BIT := true                      # true/false: Determine if the device is 64-bit or not
 TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/prebuilt/zImage
 TARGET_PREBUILT_RECOVERY_KERNEL := $(LOCAL_PATH)/prebuilt/zImage
-# Get the CMDLine, Base, Pagesize and offsets from Unpacked recovery image and put below
+# The CMDLine, Base, Pagesize and offsets are from the Unpacked recovery image.
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 buildvariant=user veritykeyid=id:7e4333f9bba00adfe0ede979e28ed1920492b40f JRD_VERSION_MARK_R2B2P0P0CU00
 BOARD_KERNEL_BASE := 0x40078000
 BOARD_KERNEL_PAGESIZE := 2048

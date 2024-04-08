@@ -1,5 +1,5 @@
-# Replace $$DEVICE$$ with your Device Name's Value. Mine is Primo_RX5.
-# Replace $$BRAND$$ with your Brand's / Manufacturer's Value, Mine is WALTON 
+# $$DEVICE$$ is the Device Name's Value.
+# $$BRAND$$ is the Brand's / Manufacturer's Value.
 
 ifneq ($(filter 5048I,$(TARGET_DEVICE)),)
 
