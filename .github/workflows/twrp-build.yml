@@ -49,7 +49,6 @@ jobs:
           wget -q ${BASE_URL}/${NAME}.ad
 
           cat ${NAME}.a* > twrp.tar.zst
-
           zstd -d twrp.tar.zst
           tar -xf twrp.tar -C $WORKDIR
 
@@ -65,31 +64,39 @@ jobs:
           git clone https://github.com/omnirom/android_bootable_recovery \
             -b android-9.0 --depth 1 bootable/recovery
 
-      - name: Debug source tree before build
+      - name: Build recovery inside Docker
         run: |
-          cd $WORKDIR
-          echo "PWD:"
-          pwd
-          echo
-          echo "Top-level files:"
-          ls -lh
-          echo
-          echo "Looking for envsetup.sh:"
-          find . -name envsetup.sh | head -n 5
+          docker run --rm -it \
+            -e USER_ID=$(id -u) \
+            -e GROUP_ID=$(id -g) \
+            -v "$WORKDIR:/home/builder/twrp:rw" \
+            -v "$CCACHE_DIR:/srv/ccache:rw" \
+            fr3akyphantom/droid-builder bash -i << 'EOF'
+              set -e
+              cd /home/builder/twrp
 
+              echo "== Verifying envsetup =="
+              test -f build/envsetup.sh
 
-      - name: Debug build output
-        run: |
-          ls -lh /mnt/twrp/out/target/product/5048I || true
+              source build/envsetup.sh
+              lunch omni_5048I-eng
+              make -j$(nproc) recoveryimage
+          EOF
 
       - name: Package output
         run: |
           cd $WORKDIR
 
-          version=$(grep 'TW_MAIN_VERSION_STR' bootable/recovery/variables.h | cut -d '"' -f2)
+          IMG=$(find out/target/product -name "recovery*.img" | head -n 1)
+          if [ -z "$IMG" ]; then
+            echo "❌ recovery image not found"
+            find out/target/product -type f
+            exit 1
+          fi
 
-          cp out/target/product/5048I/recovery.img \
-            TWRP-${version}-5048I-$(date +"%Y%m%d")-Unofficial.img
+          VERSION=$(grep 'TW_MAIN_VERSION_STR' bootable/recovery/variables.h | cut -d '"' -f2)
+
+          cp "$IMG" "TWRP-${VERSION}-5048I-$(date +%Y%m%d)-Unofficial.img"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
