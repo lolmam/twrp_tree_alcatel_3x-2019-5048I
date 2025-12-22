@@ -9,6 +9,10 @@ jobs:
   build:
     runs-on: ubuntu-22.04
 
+    env:
+      WORKDIR: /mnt/twrp
+      CCACHE_DIR: /mnt/ccache
+
     steps:
       - name: Free disk space
         run: |
@@ -24,33 +28,36 @@ jobs:
           sudo apt update
           sudo apt install -y wget zstd git
 
+      - name: Prepare work directories
+        run: |
+          sudo mkdir -p $WORKDIR $CCACHE_DIR
+          sudo chown -R $USER:$USER /mnt
 
       - name: Pull Droid Builder image
         run: docker pull fr3akyphantom/droid-builder:latest
 
       - name: Download and extract TWRP source
         run: |
-          mkdir -p $HOME/twrp
-          cd $HOME
-      
+          cd /mnt
+
           BASE_URL="https://github.com/PhantomZone54/twrp_sources_norepo/releases/download/v3.5.0_9-20210130"
           NAME="MinimalOmniRecovery-twrp-9.0-norepo-20210130.tzst"
-      
+
           wget -q ${BASE_URL}/${NAME}.aa
           wget -q ${BASE_URL}/${NAME}.ab
           wget -q ${BASE_URL}/${NAME}.ac
           wget -q ${BASE_URL}/${NAME}.ad
-      
+
           cat ${NAME}.a* > twrp.tar.zst
-      
+
           zstd -d twrp.tar.zst
-          tar -xf twrp.tar -C $HOME/twrp
-      
+          tar -xf twrp.tar -C $WORKDIR
+
           rm -f ${NAME}.a* twrp.tar twrp.tar.zst
 
       - name: Clone device tree and recovery
         run: |
-          cd $HOME/twrp
+          cd $WORKDIR
 
           git clone https://github.com/lolmam/twrp_alcatel_3x2019-5048I.git device/TCL/5048I
 
@@ -63,8 +70,8 @@ jobs:
           docker run --rm \
             -e USER_ID=$(id -u) \
             -e GROUP_ID=$(id -g) \
-            -v "$HOME/twrp:/home/builder/twrp:rw" \
-            -v "$HOME/.ccache:/srv/ccache:rw" \
+            -v "$WORKDIR:/home/builder/twrp:rw" \
+            -v "$CCACHE_DIR:/srv/ccache:rw" \
             fr3akyphantom/droid-builder bash << 'EOF'
               cd /home/builder/twrp
               source build/envsetup.sh
@@ -75,7 +82,7 @@ jobs:
 
       - name: Package output
         run: |
-          cd $HOME/twrp
+          cd $WORKDIR
 
           version=$(grep 'TW_MAIN_VERSION_STR' bootable/recovery/variables.h | cut -d '"' -f2)
 
@@ -86,4 +93,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: TWRP-recovery
-          path: $HOME/twrp/*.img
+          path: /mnt/twrp/*.img
