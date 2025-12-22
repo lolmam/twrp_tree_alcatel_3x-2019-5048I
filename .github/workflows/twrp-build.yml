@@ -13,14 +13,11 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install tools
         run: |
           sudo apt update
-          sudo apt install -y \
-            docker.io \
-            wget \
-            zstd \
-            git
+          sudo apt install -y wget zstd git
+
 
       - name: Pull Droid Builder image
         run: docker pull fr3akyphantom/droid-builder:latest
