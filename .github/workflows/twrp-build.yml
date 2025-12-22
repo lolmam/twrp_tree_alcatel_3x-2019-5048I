@@ -22,17 +22,25 @@ jobs:
       - name: Pull Droid Builder image
         run: docker pull fr3akyphantom/droid-builder:latest
 
-      - name: Prepare TWRP source
+      - name: Download and extract TWRP source
         run: |
           mkdir -p $HOME/twrp
           cd $HOME
-
-          # Marshmallow / Android 9 base (same as Travis)
-          TWRP_SOURCE="https://github.com/PhantomZone54/twrp_sources_norepo/releases/download/v3.5.0_9-20210130/MinimalOmniRecovery-twrp-9.0-norepo-20210130.tzst.ad"
-
-          wget -q "$TWRP_SOURCE" -O twrp.tar.xz
-          tar --zstd -xvf twrp.tar.xz -C $HOME/twrp
-          rm twrp.tar.xz
+      
+          BASE_URL="https://github.com/PhantomZone54/twrp_sources_norepo/releases/download/v3.5.0_9-20210130"
+          NAME="MinimalOmniRecovery-twrp-9.0-norepo-20210130.tzst"
+      
+          wget -q ${BASE_URL}/${NAME}.aa
+          wget -q ${BASE_URL}/${NAME}.ab
+          wget -q ${BASE_URL}/${NAME}.ac
+          wget -q ${BASE_URL}/${NAME}.ad
+      
+          cat ${NAME}.a* > twrp.tar.zst
+      
+          zstd -d twrp.tar.zst
+          tar -xf twrp.tar -C $HOME/twrp
+      
+          rm -f ${NAME}.a* twrp.tar twrp.tar.zst
 
       - name: Clone device tree and recovery
         run: |
