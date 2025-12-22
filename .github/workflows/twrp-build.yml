@@ -1,0 +1,78 @@
+name: Build TWRP Recovery
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            docker.io \
+            wget \
+            zstd \
+            git
+
+      - name: Pull Droid Builder image
+        run: docker pull fr3akyphantom/droid-builder:latest
+
+      - name: Prepare TWRP source
+        run: |
+          mkdir -p $HOME/twrp
+          cd $HOME
+
+          # Marshmallow / Android 9 base (same as Travis)
+          TWRP_SOURCE="https://github.com/PhantomZone54/twrp_sources_norepo/releases/download/v3.5.0_9-20210130/MinimalOmniRecovery-twrp-9.0-norepo-20210130.tzst.ad"
+
+          wget -q "$TWRP_SOURCE" -O twrp.tar.xz
+          tar --zstd -xvf twrp.tar.xz -C $HOME/twrp
+          rm twrp.tar.xz
+
+      - name: Clone device tree and recovery
+        run: |
+          cd $HOME/twrp
+
+          git clone https://github.com/lolmam/twrp_alcatel_3x2019-5048I.git device/TCL/5048I
+
+          rm -rf bootable/recovery
+          git clone https://github.com/omnirom/android_bootable_recovery \
+            -b android-9.0 --depth 1 bootable/recovery
+
+      - name: Build recovery inside Docker
+        run: |
+          docker run --rm \
+            -e USER_ID=$(id -u) \
+            -e GROUP_ID=$(id -g) \
+            -v "$HOME/twrp:/home/builder/twrp:rw" \
+            -v "$HOME/.ccache:/srv/ccache:rw" \
+            fr3akyphantom/droid-builder bash << 'EOF'
+              cd /home/builder/twrp
+              source build/envsetup.sh
+              BUILD_FLAVOR="eng"
+              lunch omni_5048I-${BUILD_FLAVOR}
+              make -j$(nproc) recoveryimage
+          EOF
+
+      - name: Package output
+        run: |
+          cd $HOME/twrp
+
+          version=$(grep 'TW_MAIN_VERSION_STR' bootable/recovery/variables.h | cut -d '"' -f2)
+
+          cp out/target/product/5048I/recovery.img \
+            TWRP-${version}-5048I-$(date +"%Y%m%d")-Unofficial.img
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWRP-recovery
+          path: $HOME/twrp/*.img
