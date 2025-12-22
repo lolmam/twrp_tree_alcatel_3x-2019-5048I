@@ -67,6 +67,7 @@ jobs:
       - name: Build recovery inside Docker
         run: |
           docker run --rm \
+            --user $(id -u):$(id -g) \
             -e USER_ID=$(id -u) \
             -e GROUP_ID=$(id -g) \
             -v "$WORKDIR:/home/builder/twrp:rw" \
@@ -79,7 +80,6 @@ jobs:
               lunch omni_5048I-eng
               make -j\$(nproc) recoveryimage
             "
-          EOF
 
       - name: Package output
         run: |
