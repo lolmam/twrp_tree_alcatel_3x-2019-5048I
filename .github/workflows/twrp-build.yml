@@ -66,21 +66,19 @@ jobs:
 
       - name: Build recovery inside Docker
         run: |
-          docker run --rm -it \
+          docker run --rm \
             -e USER_ID=$(id -u) \
             -e GROUP_ID=$(id -g) \
             -v "$WORKDIR:/home/builder/twrp:rw" \
             -v "$CCACHE_DIR:/srv/ccache:rw" \
-            fr3akyphantom/droid-builder bash -i << 'EOF'
+            fr3akyphantom/droid-builder \
+            bash -lc "
               set -e
               cd /home/builder/twrp
-
-              echo "== Verifying envsetup =="
-              test -f build/envsetup.sh
-
               source build/envsetup.sh
               lunch omni_5048I-eng
-              make -j$(nproc) recoveryimage
+              make -j\$(nproc) recoveryimage
+            "
           EOF
 
       - name: Package output
