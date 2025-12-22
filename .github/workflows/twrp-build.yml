@@ -80,6 +80,10 @@ jobs:
               make -j$(nproc) recoveryimage
           EOF
 
+      - name: Debug build output
+        run: |
+          ls -lh /mnt/twrp/out/target/product/5048I || true
+
       - name: Package output
         run: |
           cd $WORKDIR
