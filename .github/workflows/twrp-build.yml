@@ -70,16 +70,27 @@ jobs:
             --user $(id -u):$(id -g) \
             -e USER_ID=$(id -u) \
             -e GROUP_ID=$(id -g) \
+            -e HOME=/home/builder \
+            -e GOPATH=/home/builder/go \
+            -e GOCACHE=/home/builder/.cache/go-build \
             -v "$WORKDIR:/home/builder/twrp:rw" \
             -v "$CCACHE_DIR:/srv/ccache:rw" \
             fr3akyphantom/droid-builder \
             bash -lc "
               set -e
+              export HOME=/home/builder
               cd /home/builder/twrp
+      
+              # Required directories
+              mkdir -p \$HOME/.cache/go-build
+              mkdir -p .repo/local_manifests
+      
+              # Android build
               source build/envsetup.sh
               lunch omni_5048I-eng
               make -j\$(nproc) recoveryimage
             "
+
 
       - name: Package output
         run: |
