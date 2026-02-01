@@ -89,6 +89,7 @@ jobs:
               export HOME=/home/builder
               mkdir -p /home/builder/.cache/go-build
               cd /home/builder/twrp
+              mkdir -p .repo/local_manifests
               source build/envsetup.sh
               lunch omni_5048I-eng
               make -j\$(nproc) recoveryimage
