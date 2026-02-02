@@ -23,10 +23,17 @@ BOARD_USES_MMCUTILS := true
 BOARD_SUPPRESS_EMMC_WIPE := true
 BOARD_CHARGER_SHOW_PERCENTAGE := true
 RECOVERY_SDCARD_ON_DATA := true               # Optional: If /sdcard partition is emulated on /data partition 
+BOARD_INCLUDE_RECOVERY_DTBO := true
+BOARD_PREBUILT_RECOVERY_DTBO := $(LOCAL_PATH)/prebuilt/recovery_dtbo.img
+BOARD_KERNEL_SEPARATED_DT := true
+BOARD_USES_SYSTEM_ROOT_IMAGE := false
+BOARD_USES_RECOVERY_AS_BOOT := false
 
 # TWRP stuff
 TW_EXCLUDE_SUPERSU := true                    # true/false: Add SuperSU or not
 TW_INCLUDE_CRYPTO := true                     # true/false: Add Data Encryption Support or not
+TW_INCLUDE_CRYPTO_FBE := true
+TW_USE_FBE_METADATA_DECRYPTION := true
 # TW_INPUT_BLACKLIST := "hbtp_vm"             # Optional: Disables virtual mouse
 TW_SCREEN_BLANK_ON_BOOT := true
 TW_THEME := portrait_hdpi                     # Set the exact theme you wanna use. If resulation doesn't match, define the height/width
@@ -38,13 +45,16 @@ TARGET_RECOVERY_PIXEL_FORMAT := "RGBA_8888"
 TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
 TW_SECONDARY_BRIGHTNESS_PATH := /sys/devices/platform/leds-mt65xx/leds/lcd-backlight/brightness
 # Set the Path of Logical Units (LUNs) for Storage below (as per your chip/device)
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/mt_usb/musb-hdrc/gadget/lun%d/file
+# TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/mt_usb/musb-hdrc/gadget/lun%d/file
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun/file
 TW_MAX_BRIGHTNESS := 255
 TW_DEFAULT_BRIGHTNESS := 80                   # Set custom brightness, low is better
 TW_NO_HWC := true
 TARGET_USES_HWC2 := false
 TARGET_USES_GRALLOC1 := false
+# Android 10+ mount logic
+TW_USE_TOOLBOX := false
+TW_USE_BUSYBOX := true
 
 TW_INCLUDE_NTFS_3G := true                    # Include NTFS Filesystem Support
 TW_INCLUDE_FUSE_EXFAT := true                 # Include Fuse-ExFAT Filesystem Support
