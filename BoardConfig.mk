@@ -1,6 +1,9 @@
 LOCAL_PATH := device/TCL/5048I
 
 TARGET_BOARD_PLATFORM := mt6763               # From ro.mediatek.platform, but lowercase value
+PLATFORM_VERSION := 13
+PLATFORM_SECURITY_PATCH := 2099-12-31
+BOARD_VNDK_VERSION := current
 TARGET_NO_BOOTLOADER := true
 TARGET_BOOTLOADER_BOARD_NAME := MT6763     # From ro.product.board
 
@@ -26,7 +29,7 @@ RECOVERY_SDCARD_ON_DATA := true               # Optional: If /sdcard partition i
 BOARD_INCLUDE_RECOVERY_DTBO := true
 BOARD_PREBUILT_RECOVERY_DTBO := $(LOCAL_PATH)/prebuilt/recovery_dtbo.img
 BOARD_KERNEL_SEPARATED_DT := true
-BOARD_USES_SYSTEM_ROOT_IMAGE := false
+BOARD_USES_SYSTEM_ROOT_IMAGE := true
 BOARD_USES_RECOVERY_AS_BOOT := false
 
 # TWRP stuff
