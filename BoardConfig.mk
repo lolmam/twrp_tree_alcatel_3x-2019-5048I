@@ -80,6 +80,9 @@ TW_DEFAULT_LANGUAGE := en                     # Set Default Language
 TW_EXTRA_LANGUAGES := false
 
 # Kernel
+TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/prebuilt/zImage
+TARGET_PREBUILT_RECOVERY_KERNEL := $(LOCAL_PATH)/prebuilt/zImage
+BOARD_KERNEL_IMAGE_NAME := zImage
 # The CMDLine, Base, Pagesize and offsets are from the Unpacked recovery image.
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 buildvariant=user veritykeyid=id:7e4333f9bba00adfe0ede979e28ed1920492b40f JRD_VERSION_MARK_R2B2P0P0CU00
 BOARD_KERNEL_BASE := 0x40078000
