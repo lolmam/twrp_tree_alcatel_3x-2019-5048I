@@ -1,5 +1,9 @@
 LOCAL_PATH := device/TCL/5048I
 
+TARGET_IS_64_BIT := true
+TARGET_USES_64_BIT_BINDER := true
+TARGET_SUPPORTS_64_BIT_BINDER := true
+
 TARGET_BOARD_PLATFORM := mt6763               # From ro.mediatek.platform, but lowercase value
 PLATFORM_VERSION := 13
 PLATFORM_SECURITY_PATCH := 2099-12-31
@@ -53,7 +57,7 @@ TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
 TW_SECONDARY_BRIGHTNESS_PATH := /sys/devices/platform/leds-mt65xx/leds/lcd-backlight/brightness
 # Set the Path of Logical Units (LUNs) for Storage below (as per your chip/device)
 # TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/mt_usb/musb-hdrc/gadget/lun%d/file
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun/file
+TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun%d/file
 TW_MAX_BRIGHTNESS := 255
 TW_DEFAULT_BRIGHTNESS := 80                   # Set custom brightness, low is better
 TW_NO_HWC := true
@@ -76,9 +80,6 @@ TW_DEFAULT_LANGUAGE := en                     # Set Default Language
 TW_EXTRA_LANGUAGES := false
 
 # Kernel
-TARGET_IS_64_BIT := true                      # true/false: Determine if the device is 64-bit or not
-TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/prebuilt/zImage
-TARGET_PREBUILT_RECOVERY_KERNEL := $(LOCAL_PATH)/prebuilt/zImage
 # The CMDLine, Base, Pagesize and offsets are from the Unpacked recovery image.
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 buildvariant=user veritykeyid=id:7e4333f9bba00adfe0ede979e28ed1920492b40f JRD_VERSION_MARK_R2B2P0P0CU00
 BOARD_KERNEL_BASE := 0x40078000
@@ -100,10 +101,10 @@ TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_ABI2 :=
 TARGET_CPU_VARIANT := cortex-a53
 TARGET_2ND_ARCH := arm
-TARGET_2ND_ARCH_VARIANT := armv7-a-neon
+TARGET_2ND_ARCH_VARIANT := armv8-a
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
-TARGET_2ND_CPU_VARIANT := cortex-a53
+TARGET_2ND_CPU_VARIANT := generic
 TARGET_CPU_ABI_LIST_64_BIT := $(TARGET_CPU_ABI)
 TARGET_CPU_ABI_LIST_32_BIT := $(TARGET_2ND_CPU_ABI),$(TARGET_2ND_CPU_ABI2)
 TARGET_CPU_ABI_LIST := $(TARGET_CPU_ABI_LIST_64_BIT),$(TARGET_CPU_ABI_LIST_32_BIT)
