@@ -28,15 +28,19 @@ BOARD_CHARGER_SHOW_PERCENTAGE := true
 RECOVERY_SDCARD_ON_DATA := true               # Optional: If /sdcard partition is emulated on /data partition 
 BOARD_INCLUDE_RECOVERY_DTBO := true
 BOARD_PREBUILT_RECOVERY_DTBO := $(LOCAL_PATH)/prebuilt/recovery_dtbo.img
-BOARD_KERNEL_SEPARATED_DT := true
+BOARD_KERNEL_SEPARATED_DT := false
 BOARD_USES_SYSTEM_ROOT_IMAGE := true
 BOARD_USES_RECOVERY_AS_BOOT := false
 
 # TWRP stuff
+TW_DEVICE_VERSION := 5048I_v1
 TW_EXCLUDE_SUPERSU := true                    # true/false: Add SuperSU or not
 TW_INCLUDE_CRYPTO := true                     # true/false: Add Data Encryption Support or not
 TW_INCLUDE_CRYPTO_FBE := true
 TW_USE_FBE_METADATA_DECRYPTION := true
+TW_PREPARE_DATA_MEDIA := true
+TW_INCLUDE_LIBRESETPROP := true
+TW_INCLUDE_REPACKTOOLS := true
 # TW_INPUT_BLACKLIST := "hbtp_vm"             # Optional: Disables virtual mouse
 TW_SCREEN_BLANK_ON_BOOT := true
 TW_THEME := portrait_hdpi                     # Set the exact theme you wanna use. If resulation doesn't match, define the height/width
@@ -58,6 +62,11 @@ TARGET_USES_GRALLOC1 := false
 # Android 10+ mount logic
 TW_USE_TOOLBOX := false
 TW_USE_BUSYBOX := true
+
+# Build broken flags for older prebuilts
+BUILD_BROKEN_DUP_RULES := true
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+BUILD_BROKEN_MISSING_REQUIRED_MODULES := true
 
 TW_INCLUDE_NTFS_3G := true                    # Include NTFS Filesystem Support
 TW_INCLUDE_FUSE_EXFAT := true                 # Include Fuse-ExFAT Filesystem Support
